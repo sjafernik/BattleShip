@@ -1,4 +1,17 @@
-def game():
+def init_board():
+    # inicjuje pustą planszę
+
+    pass
+
+
+def display_board(board):
+    # pokazuje zmiany na planszy
+
+    pass
+
+
+def is_possible_to_mark(board):
+    # na etapie ustawiania statków sprawdza czy statki się ze sobą nie stykają
 
     pass
 
@@ -11,26 +24,8 @@ def place_your_ship(ship):
     pass
 
 
-def is_possible_to_mark(board):
-    # na etapie ustawiania statków sprawdza czy statki się ze sobą nie stykają
-
-    pass
-
-
-def display_board(board):
-    # pokazuje zmiany na planszy
-
-    pass
-
-
-def init_board():
-    # inicjuje pustą planszę
-
-    pass
-
-
 def shoot():
-
+    # SZCZELANIE
     pass
 
 
@@ -46,5 +41,10 @@ def mark_shoot_place():
 def end_game():
     # wypisuje zwycięzcę i kończy grę
     # wychodzi z pętli
+
+    pass
+
+
+def game():
 
     pass
