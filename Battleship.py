@@ -44,17 +44,17 @@ def player_input():
     begin = 1  # the first column of the board
     end = 6  # the last column of the board
 
-    row = input("\nEnter your row coordinates (A-E): ").capitalize()  # ask for a row from A to E
+    row = input(f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()  # ask for a row from A to E
 
     while row not in row_list:  # check if input is in board
-        row = input("\nEnter your row coordinates (A-E): ").capitalize()
+        row = input(f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()
 
     row = row_list.index(row)  # make from letter an index of row
 
-    col = int(input("Enter your col coordinates (1-5): "))  # ask for a col from board
+    col = int(input(f"Enter your col coordinates {begin}-{end-1}: "))  # ask for a col from board
 
     while col not in range(begin, end):  # check if input is in board
-        col = int(input("Enter your col coordinates (1-5): "))
+        col = int(input(f"Enter your col coordinates {begin}-{end-1}: "))
 
     col = col - 1  # -1 for make from input an index
 
