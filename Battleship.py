@@ -92,21 +92,40 @@ def move_is_possible(board):
     return possible_move
 
 
-def place_your_ship(board):
+def place_your_one_ship(board, ship):
     # zaznacza ustawienie statków z wykorzystaniem is_possible_to_mark()
     # musi zapisać współrzędne położenia statku w liście
     # parametr ship będzie przyjmował długość statku
 
-    coordinate = player_input()
-    row = coordinate[0]
-    col = coordinate[1]
+    # trzeba dopisać warunki żeby stawiał w linin iksy
+    while ship != 0:
+        coordinate = player_input()
+        row = coordinate[0]
+        col = coordinate[1]
 
-    temp_board = board
+        temp_board = board
 
-    if temp_board[row][col] == '0':
-        temp_board[row][col] = 'X'
+        if temp_board[row][col] == '0':
+            temp_board[row][col] = 'X'
+
+        ship -= 1
 
     return temp_board
+
+
+def yours_ship():
+    print("place your long ship")
+    ship = 3
+    your_board = place_your_one_ship(init_board(), ship)
+    display_board(your_board)
+
+    ship = 2
+    your_board = place_your_one_ship(your_board, ship)
+    display_board(your_board)
+
+    ship = 1
+    your_board = place_your_one_ship(your_board, ship)
+    display_board(your_board)
 
 
 def shoot():
@@ -180,11 +199,11 @@ def game():
     pass
 
 
-# example of board with ships for tests
-board_with_ships = [["0", "X", "0", "0", "X"],
-                    ["X", "0", "0", "0", "0"],
-                    ["X", "0", "0", "0", "0"],
-                    ["X", "0", "0", "0", "0"],
-                    ["0", "X", "0", "0", "0"]]
-
-print(move_is_possible(board_with_ships))
+# # example of board with ships for tests
+# board_with_ships = [["0", "X", "0", "0", "X"],
+#                     ["X", "0", "0", "0", "0"],
+#                     ["X", "0", "0", "0", "0"],
+#                     ["X", "0", "0", "0", "0"],
+#                     ["0", "X", "0", "0", "0"]]
+#
+# print(move_is_possible(board_with_ships))
