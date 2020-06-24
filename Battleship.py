@@ -44,17 +44,18 @@ def player_input():
     begin = 1  # the first column of the board
     end = 6  # the last column of the board
 
-    row = input(f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()  # ask for a row from A to E
+    row = input(
+        f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()  # ask for a row from A to E
 
     while row not in row_list:  # check if input is in board
         row = input(f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()
 
     row = row_list.index(row)  # make from letter an index of row
 
-    col = int(input(f"Enter your col coordinates {begin}-{end-1}: "))  # ask for a col from board
+    col = int(input(f"Enter your col coordinates {begin}-{end - 1}: "))  # ask for a col from board
 
     while col not in range(begin, end):  # check if input is in board
-        col = int(input(f"Enter your col coordinates {begin}-{end-1}: "))
+        col = int(input(f"Enter your col coordinates {begin}-{end - 1}: "))
 
     col = col - 1  # -1 for make from input an index
 
@@ -63,35 +64,49 @@ def player_input():
     return coordinate
 
 
-def is_possible_to_mark(board):
+def move_is_possible(board):
     # check if field is free
-    pass
+
+    coordinates = player_input()
+    row = coordinates[0]
+    col = coordinates[1]
+
+    board_ship = board
+
+    for i in range(0, len(board_ship)):
+        board_ship[i].insert(0, "0")
+        board_ship[i].append("0")
+
+    board_ship.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
+    board_ship.append(["0", "0", "0", "0", "0", "0", "0"])
+
+    if board_ship[row][col] != "0":
+        print("This place is already taken!")
+        return
+
+    possible_move = ((board_ship[row + 1][col + 2] == "0")
+                    and (board_ship[row + 1][col] == "0")
+                    and (board_ship[row][col + 1] == "0")
+                    and (board_ship[row + 2][col + 1] == "0"))
+
+    return possible_move
 
 
-def place_your_ship(ship):
+def place_your_ship(board):
     # zaznacza ustawienie statków z wykorzystaniem is_possible_to_mark()
     # musi zapisać współrzędne położenia statku w liście
     # parametr ship będzie przyjmował długość statku
-    begin = 1  # the first column of the board
-    end = 6  # the last column of the board
-    ship='X'
-    board_ship_with_x = [["0", "0", "0", "0", "0"],
-                        ["0", "0", "0", "0", "0"],
-                        ["0", "0", "0", "0", "0"],
-                        ["0", "0", "0", "0", "0"],
-                        ["0", "0", "0", "0", "0"]]
-    row_list = ['A', 'B', 'C', 'D', 'E']  # list of board rows for input
-    row = input(f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()  # ask for a row from A to E
-    while row in row_list:
-        row = row_list.index(row)  # make from letter an index of row
-        col = int(input(f"Enter your col coordinates {begin}-{end-1}: "))  # ask for a col from board
-        while col in range(begin, end):  # check if input is in board
-            col = col - 1
-            coordinate=[row,col]
-            if board_ship_with_x[coordinate[0]][coordinate[1]] == '0':
-                board_ship_with_x[coordinate[0]][coordinate[1]] ==ship
-                print(board_ship_with_x[coordinate[0]][coordinate[1]])
-                print(board_ship_with_x)
+
+    coordinate = player_input()
+    row = coordinate[0]
+    col = coordinate[1]
+
+    temp_board = board
+
+    if temp_board[row][col] == '0':
+        temp_board[row][col] = 'X'
+
+    return temp_board
 
 
 def shoot():
@@ -99,13 +114,59 @@ def shoot():
     pass
 
 
-def mark_shoot_place():
-    # 0 indicates an undiscovered tile
-    # M indicates a missed shot
-    # H indicates a hit ship part
-    # S indicates a sunk ship part
+def mark_shoot_place(coordinates):
+    missed_shot = 'M'
+    hit_ship = 'H'
+    sunk_ship = 'S'
+    neib_cells = []
+    list_end = len(board_with_ships) - 1
 
-    pass
+    if coordinates[0] == 0:
+        down_one = [board_with_ships[coordinates[0] + 1][coordinates[1]]]
+        neib_cells.append(down_one)
+
+    elif coordinates[0] == 4:
+        up_one = [board_with_ships[coordinates[0] - 1][coordinates[1]]]
+        neib_cells.append(up_one)
+
+    else:
+        down_one = [board_with_ships[coordinates[0] + 1][coordinates[1]]]
+        neib_cells.append(down_one)
+        up_one = [board_with_ships[coordinates[0] - 1][coordinates[1]]]
+        neib_cells.append(up_one)
+
+    if coordinates[1] == 0:
+        right_one = [board_with_ships[coordinates[0]][coordinates[1] + 1]]
+        neib_cells.append(right_one)
+
+    elif coordinates[1] == 4:
+        left_one = [board_with_ships[coordinates[0]][coordinates[1] - 1]]
+        neib_cells.append(left_one)
+
+    else:
+        right_one = [board_with_ships[coordinates[0]][coordinates[1] + 1]]
+        left_one = [board_with_ships[coordinates[0]][coordinates[1] - 1]]
+        neib_cells.append(left_one)
+        neib_cells.append(right_one)
+
+    if board_with_ships[coordinates[0]][coordinates[1]] == 'X':
+        if ['X'] in neib_cells:
+            board_with_ships[coordinates[0]][coordinates[1]] = hit_ship
+        else:
+            board_with_ships[coordinates[0]][coordinates[1]] = sunk_ship
+
+
+    elif board_with_ships[coordinates[0]][coordinates[1]] == '0':
+        board_with_ships[coordinates[0]][coordinates[1]] = missed_shot
+
+
+# def mark_shoot_place():
+#     # 0 indicates an undiscovered tile
+#     # M indicates a missed shot
+#     # H indicates a hit ship part
+#     # S indicates a sunk ship part
+#
+#     pass
 
 
 def end_game():
@@ -120,11 +181,10 @@ def game():
 
 
 # example of board with ships for tests
-board_with_ships = [["0", "X", "X", "0", "X"],
+board_with_ships = [["0", "X", "0", "0", "X"],
                     ["X", "0", "0", "0", "0"],
-                    ["X", "0", "X", "X", "0"],
                     ["X", "0", "0", "0", "0"],
-                    ["0", "X", "0", "X", "0"]]
+                    ["X", "0", "0", "0", "0"],
+                    ["0", "X", "0", "0", "0"]]
 
-coordinates = player_input()
-print(coordinates)
+print(move_is_possible(board_with_ships))
