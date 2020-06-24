@@ -69,7 +69,6 @@ def is_possible_to_mark(board):
 
 
 def place_your_ship(ship):
-    def place_your_ship():
     # zaznacza ustawienie statków z wykorzystaniem is_possible_to_mark()
     # musi zapisać współrzędne położenia statku w liście
     # parametr ship będzie przyjmował długość statku
