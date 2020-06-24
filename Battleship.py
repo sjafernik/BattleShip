@@ -69,11 +69,30 @@ def is_possible_to_mark(board):
 
 
 def place_your_ship(ship):
+    def place_your_ship():
     # zaznacza ustawienie statków z wykorzystaniem is_possible_to_mark()
     # musi zapisać współrzędne położenia statku w liście
     # parametr ship będzie przyjmował długość statku
-
-    pass
+    begin = 1  # the first column of the board
+    end = 6  # the last column of the board
+    ship='X'
+    board_ship_with_x = [["0", "0", "0", "0", "0"],
+                        ["0", "0", "0", "0", "0"],
+                        ["0", "0", "0", "0", "0"],
+                        ["0", "0", "0", "0", "0"],
+                        ["0", "0", "0", "0", "0"]]
+    row_list = ['A', 'B', 'C', 'D', 'E']  # list of board rows for input
+    row = input(f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()  # ask for a row from A to E
+    while row in row_list:
+        row = row_list.index(row)  # make from letter an index of row
+        col = int(input(f"Enter your col coordinates {begin}-{end-1}: "))  # ask for a col from board
+        while col in range(begin, end):  # check if input is in board
+            col = col - 1
+            coordinate=[row,col]
+            if board_ship_with_x[coordinate[0]][coordinate[1]] == '0':
+                board_ship_with_x[coordinate[0]][coordinate[1]] ==ship
+                print(board_ship_with_x[coordinate[0]][coordinate[1]])
+                print(board_ship_with_x)
 
 
 def shoot():
