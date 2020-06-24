@@ -129,54 +129,44 @@ def yours_ship():
 
 
 def shoot():
-    # SZCZELANIE
-    pass
+    
+    coordinates = player_input()
+ 
+    if board_ship_[coordinates[0]][coordinates[1]] != '0' and board_ship_[coordinates[0]][coordinates[1]] !='X':
+        print ("You have already shot this spot.")
+                            
+    else:
+        mark_shoot_place(coordinates)
 
 
 def mark_shoot_place(coordinates):
+       
     missed_shot = 'M'
     hit_ship = 'H'
     sunk_ship = 'S'
-    neib_cells = []
-    list_end = len(board_with_ships) - 1
+    list_end = len(temp_board)-1
 
-    if coordinates[0] == 0:
-        down_one = [board_with_ships[coordinates[0] + 1][coordinates[1]]]
-        neib_cells.append(down_one)
+    for i in range(0, len(temp_board)):
+        temp_board[i].insert(0, "0")
+        temp_board[i].append("0")
 
-    elif coordinates[0] == 4:
-        up_one = [board_with_ships[coordinates[0] - 1][coordinates[1]]]
-        neib_cells.append(up_one)
+    temp_board.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
+    temp_board.append(["0", "0", "0", "0", "0", "0", "0"])
 
-    else:
-        down_one = [board_with_ships[coordinates[0] + 1][coordinates[1]]]
-        neib_cells.append(down_one)
-        up_one = [board_with_ships[coordinates[0] - 1][coordinates[1]]]
-        neib_cells.append(up_one)
-
-    if coordinates[1] == 0:
-        right_one = [board_with_ships[coordinates[0]][coordinates[1] + 1]]
-        neib_cells.append(right_one)
-
-    elif coordinates[1] == 4:
-        left_one = [board_with_ships[coordinates[0]][coordinates[1] - 1]]
-        neib_cells.append(left_one)
-
-    else:
-        right_one = [board_with_ships[coordinates[0]][coordinates[1] + 1]]
-        left_one = [board_with_ships[coordinates[0]][coordinates[1] - 1]]
-        neib_cells.append(left_one)
-        neib_cells.append(right_one)
-
-    if board_with_ships[coordinates[0]][coordinates[1]] == 'X':
+    neib_cells=[[temp_board[coordinates[0]+2][coordinates[1]+1]],[temp_board[coordinates[0]][coordinates[1]+1]],[temp_board[coordinates[0]+1][coordinates[1]+2]],[temp_board[coordinates[0]+1][coordinates[1]]]]
+    
+    print(neib_cells)
+    print(temp_board)
+   
+    if temp_board[coordinates[0]+1][coordinates[1]+1] == 'X':
         if ['X'] in neib_cells:
-            board_with_ships[coordinates[0]][coordinates[1]] = hit_ship
+            board_ship[coordinates[0]][coordinates[1]] = hit_ship
         else:
-            board_with_ships[coordinates[0]][coordinates[1]] = sunk_ship
+            board_ship[coordinates[0]][coordinates[1]] = sunk_ship
 
-
-    elif board_with_ships[coordinates[0]][coordinates[1]] == '0':
-        board_with_ships[coordinates[0]][coordinates[1]] = missed_shot
+        
+    elif temp_board[coordinates[0]+1][coordinates[1]+1] == '0':
+         board_ship[coordinates[0]][coordinates[1]] = missed_shot
 
 
 # def mark_shoot_place():
