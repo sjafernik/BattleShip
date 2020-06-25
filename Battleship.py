@@ -85,9 +85,9 @@ def move_is_possible(board):
         return
 
     possible_move = ((board_ship[row + 1][col + 2] == "0")
-                    and (board_ship[row + 1][col] == "0")
-                    and (board_ship[row][col + 1] == "0")
-                    and (board_ship[row + 2][col + 1] == "0"))
+                     and (board_ship[row + 1][col] == "0")
+                     and (board_ship[row][col + 1] == "0")
+                     and (board_ship[row + 2][col + 1] == "0"))
 
     return possible_move
 
@@ -114,68 +114,67 @@ def place_your_one_ship(board, ship):
 
 
 def yours_ship():
-    print("place your long ship")
+    display_board(init_board())
+
+    print("\nplace your's 3-deck ship")
     ship = 3
     your_board = place_your_one_ship(init_board(), ship)
     display_board(your_board)
 
-    ship = 2
-    your_board = place_your_one_ship(your_board, ship)
-    display_board(your_board)
+    print("\nplace your's two 2-deck ship")
+    for i in range(0, 2):
+        ship = 2
+        your_board = place_your_one_ship(your_board, ship)
+        display_board(your_board)
 
-    ship = 1
-    your_board = place_your_one_ship(your_board, ship)
-    display_board(your_board)
+    print("\nplace three of your's one deck ship")
+    for i in range(0, 3):
+        ship = 1
+        your_board = place_your_one_ship(your_board, ship)
+        display_board(your_board)
 
-
-def shoot():
-    
-    coordinates = player_input()
- 
-    if board_ship_[coordinates[0]][coordinates[1]] != '0' and board_ship_[coordinates[0]][coordinates[1]] !='X':
-        print ("You have already shot this spot.")
-                            
-    else:
-        mark_shoot_place(coordinates)
+    return your_board
 
 
-def mark_shoot_place(coordinates):
-       
+def mark_shoot_place(my_shoot_board, enemy_board):
     missed_shot = 'M'
     hit_ship = 'H'
     sunk_ship = 'S'
-    list_end = len(temp_board)-1
+    coordinates = player_input()
 
-    for i in range(0, len(temp_board)):
-        temp_board[i].insert(0, "0")
-        temp_board[i].append("0")
+    # enemy_board = enemy_board
+    # my_shoot_board = my_shoot_board
 
-    temp_board.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
-    temp_board.append(["0", "0", "0", "0", "0", "0", "0"])
+    if my_shoot_board[coordinates[0]][coordinates[1]] != '0' and my_shoot_board[coordinates[0]][coordinates[1]] != 'X':
+        print("You have already shot this spot.")
 
-    neib_cells=[[temp_board[coordinates[0]+2][coordinates[1]+1]],[temp_board[coordinates[0]][coordinates[1]+1]],[temp_board[coordinates[0]+1][coordinates[1]+2]],[temp_board[coordinates[0]+1][coordinates[1]]]]
-    
-    print(neib_cells)
-    print(temp_board)
-   
-    if temp_board[coordinates[0]+1][coordinates[1]+1] == 'X':
-        if ['X'] in neib_cells:
-            board_ship[coordinates[0]][coordinates[1]] = hit_ship
-        else:
-            board_ship[coordinates[0]][coordinates[1]] = sunk_ship
+    else:
+        for i in range(0, len(enemy_board)):
+            enemy_board[i].insert(0, "0")
+            enemy_board[i].append("0")
 
-        
-    elif temp_board[coordinates[0]+1][coordinates[1]+1] == '0':
-         board_ship[coordinates[0]][coordinates[1]] = missed_shot
+        enemy_board.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
+        enemy_board.append(["0", "0", "0", "0", "0", "0", "0"])
+
+        neib_cells = [[enemy_board[coordinates[0] + 2][coordinates[1] + 1]],
+                      [enemy_board[coordinates[0]][coordinates[1] + 1]],
+                      [enemy_board[coordinates[0] + 1][coordinates[1] + 2]],
+                      [enemy_board[coordinates[0] + 1][coordinates[1]]]]
+
+        if enemy_board[coordinates[0] + 1][coordinates[1] + 1] == 'X':
+            if ['X'] in neib_cells:
+                my_shoot_board[coordinates[0]][coordinates[1]] = hit_ship
+            else:
+                my_shoot_board[coordinates[0]][coordinates[1]] = sunk_ship
+
+        elif enemy_board[coordinates[0] + 1][coordinates[1] + 1] == '0':
+            my_shoot_board[coordinates[0]][coordinates[1]] = missed_shot
 
 
-# def mark_shoot_place():
 #     # 0 indicates an undiscovered tile
 #     # M indicates a missed shot
 #     # H indicates a hit ship part
 #     # S indicates a sunk ship part
-#
-#     pass
 
 
 def end_game():
@@ -190,10 +189,23 @@ def game():
 
 
 # # example of board with ships for tests
-# board_with_ships = [["0", "X", "0", "0", "X"],
-#                     ["X", "0", "0", "0", "0"],
-#                     ["X", "0", "0", "0", "0"],
-#                     ["X", "0", "0", "0", "0"],
-#                     ["0", "X", "0", "0", "0"]]
+
 #
 # print(move_is_possible(board_with_ships))
+
+player2_ship_board = [["0", "X", "0", "0", "X"],
+                      ["X", "0", "0", "0", "0"],
+                      ["X", "0", "0", "0", "0"],
+                      ["X", "0", "0", "0", "0"],
+                      ["0", "X", "0", "0", "0"]]
+
+# player1_shoot_board = init_board()
+#
+# mark_shoot_place(player1_shoot_board, player2_ship_board)
+#
+# display_board(player1_shoot_board)
+
+player1_ship_board = yours_ship()
+
+
+
