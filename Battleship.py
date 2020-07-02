@@ -1,3 +1,6 @@
+import copy
+
+
 def init_board():
     # initialized empty game board
 
@@ -71,7 +74,8 @@ def move_is_possible(board):
     row = coordinates[0]
     col = coordinates[1]
 
-    board_ship = board
+    origin_board = board
+    board_ship = copy.deepcopy(origin_board)
 
     for i in range(0, len(board_ship)):
         board_ship[i].insert(0, "0")
@@ -80,7 +84,7 @@ def move_is_possible(board):
     board_ship.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
     board_ship.append(["0", "0", "0", "0", "0", "0", "0"])
 
-    if board_ship[row][col] != "0":
+    if board_ship[row + 1][col + 1] != "0":
         print("This place is already taken!")
         return
 
@@ -93,6 +97,7 @@ def move_is_possible(board):
 
 
 def place_your_one_ship(board, ship):
+    def place_your_one_ship(board, ship):
     # ask player if he want:
     # horizontal_right
     # vertical_down
@@ -234,9 +239,6 @@ def game():
     pass
 
 
-# # example of board with ships for tests
-
-#
 # print(move_is_possible(board_with_ships))
 
 player2_ship_board = [["0", "X", "0", "0", "X"],
@@ -244,14 +246,16 @@ player2_ship_board = [["0", "X", "0", "0", "X"],
                       ["X", "0", "0", "0", "0"],
                       ["X", "0", "0", "0", "0"],
                       ["0", "X", "0", "0", "0"]]
-
-# player1_shoot_board = init_board()
 #
-# mark_shoot_place(player1_shoot_board, player2_ship_board)
+# for i in range(0, 4):
+#     player1_shoot_board = init_board()
 #
-# display_board(player1_shoot_board)
+#     mark_shoot_place(player1_shoot_board, player2_ship_board)
+#
+#     display_board(player1_shoot_board)
+#
+#
 
-player1_ship_board = yours_ship()
-
-
-
+display_board(player2_ship_board)
+print(move_is_possible(player2_ship_board))
+display_board(player2_ship_board)
