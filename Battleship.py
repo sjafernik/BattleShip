@@ -93,24 +93,70 @@ def move_is_possible(board):
 
 
 def place_your_one_ship(board, ship):
-    # zaznacza ustawienie statków z wykorzystaniem is_possible_to_mark()
-    # musi zapisać współrzędne położenia statku w liście
-    # parametr ship będzie przyjmował długość statku
+    # ask player if he want:
+    # horizontal_right
+    # vertical_down
+    # ship placement
+    ship_list=[]
+    board_with_ships = board
+    direction = 0
 
-    # trzeba dopisać warunki żeby stawiał w linin iksy
-    while ship != 0:
-        coordinate = player_input()
-        row = coordinate[0]
-        col = coordinate[1]
+    coordinate = player_input()
+    row = coordinate[0]
+    col = coordinate[1]
 
-        temp_board = board
+    ship_placement = input("Do you want to place your ship horizontal right or vertical down? ").lower()
 
-        if temp_board[row][col] == '0':
-            temp_board[row][col] = 'X'
+    while ship_placement != "horizontal" and ship_placement != "vertical":
+        print("please insert \"horizontal\" or \"vertical\"")
+        ship_placement = input("Do you want to place your ship horizontal right or vertical down? ").lower()
 
-        ship -= 1
+    if ship_placement == "horizontal":
+        direction = col
+    elif ship_placement == "vertical":
+        direction = row
 
-    return temp_board
+    while direction + ship > len(board_with_ships):
+        place_your_one_ship(board, ship)
+
+    temp_board = copy.deepcopy(board_with_ships)
+    
+    # sprawdzić czy są X po bokach(move_is_possible() ?)
+    # sprawdzić czy są X w miejscach gdzie będziemy wstawiać
+    if ship_placement == "vertical":
+            if move_is_possible(temp_board, direction, row, col, ship) == True: #    TO JEST źLE
+                for i in range (ship):
+                    ship_list.append(board_with_ships[row + i][col])
+                if 'X' in ship_list:
+                    print("choose another position_3")
+                    place_your_one_ship(board, ship)
+
+                else:
+                    for i in range (ship):
+                        board_with_ships[row + i][col] = 'X'
+                        display_board(board_with_ships)
+                        
+            else:
+                print("choose another position_4")
+                place_your_one_ship(board, ship)
+
+    elif ship_placement == "horizontal":
+            if move_is_possible(temp_board, direction, row, col, ship) == True: #    TO JEST źLE
+                for i in range (ship):
+                    ship_list.append(board_with_ships[row][col+i])
+                if 'X' in ship_list:
+                    print("choose another position_2")
+                    place_your_one_ship(board, ship)
+
+                else:
+                    for i in range (ship):
+                        board_with_ships[row][col+i] = 'X'
+                        display_board(board_with_ships)
+            else:
+                print("choose another position_5")
+                place_your_one_ship(board, ship)
+
+    return board_with_ships
 
 
 def yours_ship():
