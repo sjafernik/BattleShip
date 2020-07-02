@@ -67,37 +67,36 @@ def player_input():
     return coordinate
 
 
-def move_is_possible(board):
-    # check if field is free
-
-    coordinates = player_input()
-    row = coordinates[0]
-    col = coordinates[1]
-
+def move_is_possible(board, row, col, ship, ship_placement):
+    possible_move=""
     origin_board = board
     board_ship = copy.deepcopy(origin_board)
+
+    board_ship.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
+    board_ship.append(["0", "0", "0", "0", "0", "0", "0"])
 
     for i in range(0, len(board_ship)):
         board_ship[i].insert(0, "0")
         board_ship[i].append("0")
 
-    board_ship.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
-    board_ship.append(["0", "0", "0", "0", "0", "0", "0"])
+    if ship_placement == "vertical":
+        for i in range(ship):
+            possible_move = ((board_ship[row+i + 1][col + 2] == "0")
+                            and (board_ship[row+i + 1][col] == "0")
+                            and (board_ship[row+i][col + 1] == "0")
+                            and (board_ship[row+i + 2][col + 1] == "0"))
 
-    if board_ship[row + 1][col + 1] != "0":
-        print("This place is already taken!")
-        return
-
-    possible_move = ((board_ship[row + 1][col + 2] == "0")
-                     and (board_ship[row + 1][col] == "0")
-                     and (board_ship[row][col + 1] == "0")
-                     and (board_ship[row + 2][col + 1] == "0"))
-
+    elif ship_placement == "horizontal":
+        for i in range(ship):
+            possible_move = ((board_ship[row + 1][col +i + 2] == "0")
+                            and (board_ship[row + 1][col+i] == "0")
+                            and (board_ship[row][col+i + 1] == "0")
+                            and (board_ship[row + 2][col+i + 1] == "0"))
+        
     return possible_move
 
 
 def place_your_one_ship(board, ship):
-    def place_your_one_ship(board, ship):
     # ask player if he want:
     # horizontal_right
     # vertical_down
@@ -129,7 +128,7 @@ def place_your_one_ship(board, ship):
     # sprawdzić czy są X po bokach(move_is_possible() ?)
     # sprawdzić czy są X w miejscach gdzie będziemy wstawiać
     if ship_placement == "vertical":
-            if move_is_possible(temp_board, direction, row, col, ship) == True: #    TO JEST źLE
+            if move_is_possible(temp_board, row, col, ship, ship_placement):
                 for i in range (ship):
                     ship_list.append(board_with_ships[row + i][col])
                 if 'X' in ship_list:
@@ -139,14 +138,13 @@ def place_your_one_ship(board, ship):
                 else:
                     for i in range (ship):
                         board_with_ships[row + i][col] = 'X'
-                        display_board(board_with_ships)
                         
             else:
                 print("choose another position_4")
                 place_your_one_ship(board, ship)
 
     elif ship_placement == "horizontal":
-            if move_is_possible(temp_board, direction, row, col, ship) == True: #    TO JEST źLE
+            if move_is_possible(temp_board, row, col, ship, ship_placement):
                 for i in range (ship):
                     ship_list.append(board_with_ships[row][col+i])
                 if 'X' in ship_list:
@@ -156,35 +154,38 @@ def place_your_one_ship(board, ship):
                 else:
                     for i in range (ship):
                         board_with_ships[row][col+i] = 'X'
-                        display_board(board_with_ships)
+                        
             else:
                 print("choose another position_5")
                 place_your_one_ship(board, ship)
+
+    display_board(board_with_ships)
 
     return board_with_ships
 
 
 def yours_ship():
-    display_board(init_board())
+    your_board_with_ships=init_board()
+    display_board(your_board_with_ships)
 
     print("\nplace your's 3-deck ship")
     ship = 3
-    your_board = place_your_one_ship(init_board(), ship)
-    display_board(your_board)
+    your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
+    display_board(your_board_with_ships)
 
     print("\nplace your's two 2-deck ship")
     for i in range(0, 2):
         ship = 2
-        your_board = place_your_one_ship(your_board, ship)
-        display_board(your_board)
+        your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
+        display_board(your_board_with_ships)
 
     print("\nplace three of your's one deck ship")
     for i in range(0, 3):
         ship = 1
-        your_board = place_your_one_ship(your_board, ship)
-        display_board(your_board)
+        your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
+        display_board(your_board_with_ships)
 
-    return your_board
+    return your_board_with_ships
 
 
 def mark_shoot_place(my_shoot_board, enemy_board):
@@ -256,6 +257,4 @@ player2_ship_board = [["0", "X", "0", "0", "X"],
 #
 #
 
-display_board(player2_ship_board)
-print(move_is_possible(player2_ship_board))
-display_board(player2_ship_board)
+yours_ship()
