@@ -3,15 +3,6 @@ import copy
 
 def init_board():
     # initialized empty game board
-
-    # dictionary version
-    # board_ship = {'A1': '0', 'A2': '0', 'A3': '0', 'A4': '0', 'A5': '0',
-    #               'B1': '0', 'B2': '0', 'B3': '0', 'B4': '0', 'B5': '0',
-    #               'C1': '0', 'C2': '0', 'C3': '0', 'C4': '0', 'C5': '0',
-    #               'D1': '0', 'D2': '0', 'D3': '0', 'D4': '0', 'D5': '0',
-    #               'E1': '0', 'E2': '0', 'E3': '0', 'E4': '0', 'E5': '0', }
-
-    # list version
     board_ship = [["0", "0", "0", "0", "0"],
                   ["0", "0", "0", "0", "0"],
                   ["0", "0", "0", "0", "0"],
@@ -46,19 +37,27 @@ def player_input():
     row_list = ['A', 'B', 'C', 'D', 'E']  # list of board rows for input
     begin = 1  # the first column of the board
     end = 6  # the last column of the board
+    col = None
 
     row = input(
         f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()  # ask for a row from A to E
 
     while row not in row_list:  # check if input is in board
-        row = input(f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()
+        print(f"\nplease choose letter from {row_list[0]}-{row_list[-1]}")
+        row = input(f"Enter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()
 
     row = row_list.index(row)  # make from letter an index of row
 
-    col = int(input(f"Enter your col coordinates {begin}-{end - 1}: "))  # ask for a col from board
+    # try catch ValueError if player enter something different than letter
+    while True:
+        try:
+            col = int(input(f"\nEnter your col coordinates {begin}-{end - 1}: "))  # ask for a col from board
+            break
+        except ValueError:
+            print(f"\nplease choose number between {begin} and {end - 1}")  # error when input is 22aaa
 
     while col not in range(begin, end):  # check if input is in board
-        col = int(input(f"Enter your col coordinates {begin}-{end - 1}: "))
+        col = int(input(f"\nEnter your col coordinates {begin}-{end - 1}: "))
 
     col = col - 1  # -1 for make from input an index
 
@@ -68,47 +67,51 @@ def player_input():
 
 
 def move_is_possible(board, row, col, ship, ship_placement):
-    possible_move=""
+    # return True or False if move is possible
+
+    possible_move = ""
     origin_board = board
     board_ship = copy.deepcopy(origin_board)
 
+    # increase board to catch IndexOutOfRange error
     board_ship.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
     board_ship.append(["0", "0", "0", "0", "0", "0", "0"])
 
+    # adding 0 in begin and end nested list to increase them
     for i in range(0, len(board_ship)):
         board_ship[i].insert(0, "0")
         board_ship[i].append("0")
 
+    # check if there are any X in neighbour cells in vertical or horizontal position
     if ship_placement == "vertical":
         for i in range(ship):
-            possible_move = ((board_ship[row+i + 1][col + 2] == "0")
-                            and (board_ship[row+i + 1][col] == "0")
-                            and (board_ship[row+i][col + 1] == "0")
-                            and (board_ship[row+i + 2][col + 1] == "0"))
+            possible_move = ((board_ship[row + i + 1][col + 2] == "0")
+                             and (board_ship[row + i + 1][col] == "0")
+                             and (board_ship[row + i][col + 1] == "0")
+                             and (board_ship[row + i + 2][col + 1] == "0"))
 
     elif ship_placement == "horizontal":
         for i in range(ship):
-            possible_move = ((board_ship[row + 1][col +i + 2] == "0")
-                            and (board_ship[row + 1][col+i] == "0")
-                            and (board_ship[row][col+i + 1] == "0")
-                            and (board_ship[row + 2][col+i + 1] == "0"))
-        
+            possible_move = ((board_ship[row + 1][col + i + 2] == "0")
+                             and (board_ship[row + 1][col + i] == "0")
+                             and (board_ship[row][col + i + 1] == "0")
+                             and (board_ship[row + 2][col + i + 1] == "0"))
+
     return possible_move
 
 
 def place_your_one_ship(board, ship):
-    # ask player if he want:
-    # horizontal_right
-    # vertical_down
-    # ship placement
-    ship_list=[]
+    # ask player for a coordinates and direction and if its possible set one ship on board
+
+    ship_list = []  # list for possible ship cells
     board_with_ships = board
     direction = 0
 
     coordinate = player_input()
-    row = coordinate[0]
-    col = coordinate[1]
+    row = coordinate[0]  # A-E
+    col = coordinate[1]  # 1-5
 
+    # player choose direction of his ship
     ship_placement = input("Do you want to place your ship horizontal right or vertical down? ").lower()
 
     while ship_placement != "horizontal" and ship_placement != "vertical":
@@ -120,44 +123,46 @@ def place_your_one_ship(board, ship):
     elif ship_placement == "vertical":
         direction = row
 
+    # check if ship is not longer than board
     while direction + ship > len(board_with_ships):
         place_your_one_ship(board, ship)
 
+    # init temporary board to not increase our origin board in move_is_possible()
     temp_board = copy.deepcopy(board_with_ships)
-    
-    # sprawdzić czy są X po bokach(move_is_possible() ?)
-    # sprawdzić czy są X w miejscach gdzie będziemy wstawiać
+
     if ship_placement == "vertical":
-            if move_is_possible(temp_board, row, col, ship, ship_placement):
-                for i in range (ship):
-                    ship_list.append(board_with_ships[row + i][col])
-                if 'X' in ship_list:
-                    print("choose another position_3")
-                    place_your_one_ship(board, ship)
+        if move_is_possible(temp_board, row, col, ship, ship_placement):  # check neighbour cells
+            for i in range(ship):
+                ship_list.append(board_with_ships[row + i][col])  # adding possible ship cells to list
 
-                else:
-                    for i in range (ship):
-                        board_with_ships[row + i][col] = 'X'
-                        
+            if 'X' in ship_list:  # check possible cells
+                print("choose another position")
+                place_your_one_ship(board, ship)  # return to the begin of function
+
             else:
-                print("choose another position_4")
-                place_your_one_ship(board, ship)
+                for i in range(ship):
+                    board_with_ships[row + i][col] = 'X'  # mark ship cells
 
+        else:
+            print("choose another position")
+            place_your_one_ship(board, ship)  # if move_is_possible() is False return to the begin of function
+
+    # the same as vertical above
     elif ship_placement == "horizontal":
-            if move_is_possible(temp_board, row, col, ship, ship_placement):
-                for i in range (ship):
-                    ship_list.append(board_with_ships[row][col+i])
-                if 'X' in ship_list:
-                    print("choose another position_2")
-                    place_your_one_ship(board, ship)
-
-                else:
-                    for i in range (ship):
-                        board_with_ships[row][col+i] = 'X'
-                        
-            else:
-                print("choose another position_5")
+        if move_is_possible(temp_board, row, col, ship, ship_placement):
+            for i in range(ship):
+                ship_list.append(board_with_ships[row][col + i])
+            if 'X' in ship_list:
+                print("choose another position")
                 place_your_one_ship(board, ship)
+
+            else:
+                for i in range(ship):
+                    board_with_ships[row][col + i] = 'X'
+
+        else:
+            print("choose another position")
+            place_your_one_ship(board, ship)
 
     display_board(board_with_ships)
 
@@ -165,20 +170,25 @@ def place_your_one_ship(board, ship):
 
 
 def yours_ship():
-    your_board_with_ships=init_board()
+    # function return board with all ships
+
+    your_board_with_ships = init_board()
     display_board(your_board_with_ships)
 
+    # ask where to place one 3-deck ship
     print("\nplace your's 3-deck ship")
     ship = 3
     your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
     display_board(your_board_with_ships)
 
+    # ask where to place two 2-deck ships
     print("\nplace your's two 2-deck ship")
     for i in range(0, 2):
         ship = 2
         your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
         display_board(your_board_with_ships)
 
+    # ask where to place three 1-deck ships
     print("\nplace three of your's one deck ship")
     for i in range(0, 3):
         ship = 1
@@ -257,4 +267,5 @@ player2_ship_board = [["0", "X", "0", "0", "X"],
 #
 #
 
-yours_ship()
+#yours_ship()
+print(player_input())
