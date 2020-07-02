@@ -90,12 +90,18 @@ def move_is_possible(board, row, col, ship, ship_placement):
                              and (board_ship[row + i][col + 1] == "0")
                              and (board_ship[row + i + 2][col + 1] == "0"))
 
+            if not possible_move:
+                return False
+
     elif ship_placement == "horizontal":
         for i in range(ship):
             possible_move = ((board_ship[row + 1][col + i + 2] == "0")
                              and (board_ship[row + 1][col + i] == "0")
                              and (board_ship[row][col + i + 1] == "0")
                              and (board_ship[row + 2][col + i + 1] == "0"))
+
+            if not possible_move:
+                return False
 
     return possible_move
 
@@ -115,7 +121,7 @@ def place_your_one_ship(board, ship):
     ship_placement = input("Do you want to place your ship horizontal right or vertical down? ").lower()
 
     while ship_placement != "horizontal" and ship_placement != "vertical":
-        print("please insert \"horizontal\" or \"vertical\"")
+        print("Please insert \"horizontal\" or \"vertical\"")
         ship_placement = input("Do you want to place your ship horizontal right or vertical down? ").lower()
 
     if ship_placement == "horizontal":
@@ -125,6 +131,7 @@ def place_your_one_ship(board, ship):
 
     # check if ship is not longer than board
     while direction + ship > len(board_with_ships):
+        print("Part of your ship is outside of board! Choose another place. ")
         place_your_one_ship(board, ship)
 
     # init temporary board to not increase our origin board in move_is_possible()
@@ -152,6 +159,7 @@ def place_your_one_ship(board, ship):
         if move_is_possible(temp_board, row, col, ship, ship_placement):
             for i in range(ship):
                 ship_list.append(board_with_ships[row][col + i])
+
             if 'X' in ship_list:
                 print("choose another position")
                 place_your_one_ship(board, ship)
@@ -179,21 +187,18 @@ def yours_ship():
     print("\nplace your's 3-deck ship")
     ship = 3
     your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
-    display_board(your_board_with_ships)
 
     # ask where to place two 2-deck ships
     print("\nplace your's two 2-deck ship")
     for i in range(0, 2):
         ship = 2
         your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
-        display_board(your_board_with_ships)
 
     # ask where to place three 1-deck ships
     print("\nplace three of your's one deck ship")
     for i in range(0, 3):
         ship = 1
         your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
-        display_board(your_board_with_ships)
 
     return your_board_with_ships
 
@@ -239,9 +244,9 @@ def mark_shoot_place(my_shoot_board, enemy_board):
 #     # S indicates a sunk ship part
 
 
-def end_game():
-    # wypisuje zwycięzcę i kończy grę
-    # wychodzi z pętli
+def winner_check():
+    # sprawdza czy na którejś z tablic nie ma X
+    # jeśli nie ma to drugi gracz wygrał
 
     pass
 
@@ -250,22 +255,28 @@ def game():
     pass
 
 
-# print(move_is_possible(board_with_ships))
+def main():
+    print("Welcome to Battle ship game!")
 
-player2_ship_board = [["0", "X", "0", "0", "X"],
-                      ["X", "0", "0", "0", "0"],
-                      ["X", "0", "0", "0", "0"],
-                      ["X", "0", "0", "0", "0"],
-                      ["0", "X", "0", "0", "0"]]
-#
-# for i in range(0, 4):
-#     player1_shoot_board = init_board()
-#
-#     mark_shoot_place(player1_shoot_board, player2_ship_board)
-#
-#     display_board(player1_shoot_board)
-#
-#
+    player_one = input("What is first player name? ")
+    player_two = input("What is second player name? ")
 
-#yours_ship()
-print(player_input())
+    print(f"{player_one} please set your ships on board\n")
+    player_one_ship_board = yours_ship()
+
+    print(f"{player_two} please set your ships on board\n")
+    player_two_ship_board = yours_ship()
+
+
+
+
+
+main()
+
+
+
+# player2_ship_board = [["0", "X", "0", "0", "X"],
+#                       ["X", "0", "0", "0", "0"],
+#                       ["X", "0", "0", "0", "0"],
+#                       ["X", "0", "0", "0", "0"],
+#                       ["0", "X", "0", "0", "0"]]
