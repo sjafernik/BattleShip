@@ -202,51 +202,55 @@ def yours_ship():
 
 
 def mark_shoot_place(my_shoot_board, enemy_board):
-    display_board(my_shoot_board)
-
-    # 0 indicates an undiscovered tile
     missed_shot = 'M'
     hit_ship = 'H'
     sunk_ship = 'S'
     coordinates = player_input()
-    enemy_board = copy.deepcopy(enemy_board)
+
+    # enemy_board = enemy_board
+    # my_shoot_board = my_shoot_board
+
+    enemy_board_with_ships = copy.deepcopy(enemy_board)
 
     if my_shoot_board[coordinates[0]][coordinates[1]] != '0' and my_shoot_board[coordinates[0]][coordinates[1]] != 'X':
         print("You have already shot this spot.")
 
     else:
-        for i in range(0, len(enemy_board)):
-            enemy_board[i].insert(0, "0")
-            enemy_board[i].append("0")
+        for i in range(0, len(enemy_board_with_ships)):
+            enemy_board_with_ships[i].insert(0, "0")
+            enemy_board_with_ships[i].append("0")
 
-        enemy_board.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
-        enemy_board.append(["0", "0", "0", "0", "0", "0", "0"])
+        enemy_board_with_ships.insert(0, ["0", "0", "0", "0", "0", "0", "0"])
+        enemy_board_with_ships.append(["0", "0", "0", "0", "0", "0", "0"])
 
-        neib_cells = [[enemy_board[coordinates[0] + 2][coordinates[1] + 1]],
-                      [enemy_board[coordinates[0]][coordinates[1] + 1]],
-                      [enemy_board[coordinates[0] + 1][coordinates[1] + 2]],
-                      [enemy_board[coordinates[0] + 1][coordinates[1]]]]
+        neib_cells = [[enemy_board_with_ships[coordinates[0] + 2][coordinates[1] + 1]],
+                      [enemy_board_with_ships[coordinates[0]][coordinates[1] + 1]],
+                      [enemy_board_with_ships[coordinates[0] + 1][coordinates[1] + 2]],
+                      [enemy_board_with_ships[coordinates[0] + 1][coordinates[1]]]]
 
-        if enemy_board[coordinates[0] + 1][coordinates[1] + 1] == 'X':
+        if enemy_board_with_ships[coordinates[0] + 1][coordinates[1] + 1] == 'X':
             if ['X'] in neib_cells:
                 my_shoot_board[coordinates[0]][coordinates[1]] = hit_ship
+                enemy_board[coordinates[0]][coordinates[1]] = hit_ship
             else:
                 my_shoot_board[coordinates[0]][coordinates[1]] = sunk_ship
+                enemy_board[coordinates[0]][coordinates[1]] = sunk_ship
 
-        elif enemy_board[coordinates[0] + 1][coordinates[1] + 1] == '0':
+        elif enemy_board_with_ships[coordinates[0] + 1][coordinates[1] + 1] == '0':
             my_shoot_board[coordinates[0]][coordinates[1]] = missed_shot
+            enemy_board[coordinates[0]][coordinates[1]] = missed_shot
+
+    display_board(my_shoot_board)
 
 
 def winner_check(board, player):
-    # sprawdza czy na którejś z tablic nie ma X
-    # jeśli nie ma to drugi gracz wygrał
-
     check_board = board
-    is_winner = False
+    ship = "X"
 
-    if ['X'] not in check_board:
-        print(f"{player} IS A WINNER !!!")
-        is_winner = True
+    is_winner = any(ship in sublist for sublist in check_board)
+
+    if not is_winner:
+        print(f"{player} IS WINNER!")
 
     return is_winner
 
@@ -267,7 +271,6 @@ def game():
     winner = False
 
     while not winner:
-
         mark_shoot_place(player_one_shoot_board, player_two_ship_board)
         winner = winner_check(player_two_ship_board, player_one)
 
@@ -281,4 +284,31 @@ def main():
     game()
 
 
-main()
+# TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING
+
+# player_one = input("What is the first player name? ")
+# player_two = input("What is the second player name? ")
+#
+# player_one_ship_board = [["0", "X", "0", "0", "X"],
+#                          ["X", "0", "0", "0", "0"],
+#                          ["X", "0", "0", "0", "0"],
+#                          ["X", "0", "0", "0", "0"],
+#                          ["0", "X", "0", "0", "0"]]
+#
+# player_two_ship_board = [["0", "X", "0", "0", "X"],
+#                          ["X", "0", "0", "0", "0"],
+#                          ["X", "0", "0", "0", "0"],
+#                          ["X", "0", "0", "0", "0"],
+#                          ["0", "X", "0", "0", "0"]]
+#
+# player_one_shoot_board = init_board()
+# player_two_shoot_board = init_board()
+#
+# winner = True
+#
+# while winner:
+#     mark_shoot_place(player_one_shoot_board, player_two_ship_board)
+#     winner = winner_check(player_two_ship_board, player_one)
+#
+#     mark_shoot_place(player_two_shoot_board, player_one_ship_board)
+#     winner = winner_check(player_one_ship_board, player_two)
