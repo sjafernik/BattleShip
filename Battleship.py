@@ -108,34 +108,36 @@ def move_is_possible(board, row, col, ship, ship_placement):
 
 def place_your_one_ship(board, ship):
     # ask player for a coordinates and direction and if its possible set one ship on board
-    flag = True #making loop to catch error input
+    flag = True  #making loop to catch error input
+    length_flag = True  #making loop to catch IndexOutOfRange
     ship_list = []  # list for possible ship cells
     board_with_ships = board
     direction = 0
 
     while flag:
-        coordinate = player_input()
-        row = coordinate[0]  # A-E
-        col = coordinate[1]  # 1-5
+        while length_flag:
+            coordinate = player_input()
+            row = coordinate[0]  # A-E
+            col = coordinate[1]  # 1-5
 
-        # player choose direction of his ship 
-        ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
-
-        if ship_placement != "horizontal" and ship_placement != "vertical":
-            print("Please insert \"horizontal\" or \"vertical\"")
+            # player choose direction of his ship 
             ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
 
-        if ship_placement == "horizontal":
-            direction = col
-        elif ship_placement == "vertical":
-            direction = row
+            if ship_placement != "horizontal" and ship_placement != "vertical":
+                print("Please insert \"horizontal\" or \"vertical\"")
+                ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
 
-        # check if ship is not longer than board
-        if direction + ship > len(board_with_ships):
-            print("Part of your ship is outside of board! Choose another place.\n")
-            #place_your_one_ship(board, ship)
-        else:
-            flag = False
+            if ship_placement == "horizontal":
+                direction = col
+            elif ship_placement == "vertical":
+                direction = row
+
+            # check if ship is not longer than board
+            if direction + ship > len(board_with_ships):
+                print("\nPart of your ship is outside of board! Choose another place.")
+                
+            else:
+                length_flag = False
 
         # init temporary board to not increase our origin board in move_is_possible()
         temp_board = copy.deepcopy(board_with_ships)
@@ -148,16 +150,16 @@ def place_your_one_ship(board, ship):
                 if 'X' in ship_list:  # check possible cells
                     print("\nchoose another position\n")
                     flag = True
-                    #place_your_one_ship(board, ship)  # return to the begin of function
+                    length_flag = True
 
                 else:
                     for i in range(ship):
                         board_with_ships[row + i][col] = 'X'  # mark ship cells
-
+                        flag = False
             else:
                 print("\nchoose another position\n")
-                flag = True
-                #place_your_one_ship(board, ship)  # if move_is_possible() is False return to the begin of function
+                length_flag = True
+                
 
         # the same as vertical above
         elif ship_placement == "horizontal":
@@ -167,17 +169,18 @@ def place_your_one_ship(board, ship):
 
                 if 'X' in ship_list:
                     print("\nchoose another position\n")
-                    flag = True
-                    #place_your_one_ship(board, ship)
+                    length_flag = True
+                   
 
                 else:
                     for i in range(ship):
                         board_with_ships[row][col + i] = 'X'
+                        flag = False
 
             else:
                 print("\nchoose another position\n")
-                flag = True
-                #place_your_one_ship(board, ship)
+                length_flag = True
+                
 
     display_board(board_with_ships)
 
@@ -215,6 +218,7 @@ def mark_shoot_place(my_shoot_board, enemy_board):
     hit_ship = 'H'
     sunk_ship = 'S'
     coordinates = player_input()
+    enemy_board_1 = copy.deepcopy(enemy_board)
 
     # enemy_board = enemy_board
     # my_shoot_board = my_shoot_board
@@ -268,11 +272,21 @@ def main():
     player_one = input("What is first player name? ")
     player_two = input("What is second player name? ")
 
-    print(f"{player_one} please set your ships on board\n")
+    print(f"\n {player_one} please set your ships on board\n")
     player_one_ship_board = yours_ship()
 
-    print(f"{player_two} please set your ships on board\n")
+    print(f"\n {player_two} please set your ships on board\n")
     player_two_ship_board = yours_ship()
+    
+    enemy_board = player_two_ship_board
+    #my_shoot_board = board
+
+    mark_shoot_place(my_shoot_board, enemy_board)
+
+    enemy_board = player_one_ship_board
+    #my_shoot_board = board
+
+    mark_shoot_place(my_shoot_board, enemy_board)
 
 
 
