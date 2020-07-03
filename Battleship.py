@@ -247,9 +247,9 @@ def winner_check(board, player):
     check_board = board
     ship = "X"
 
-    is_winner = any(ship in sublist for sublist in check_board)
+    is_winner = not any(ship in sublist for sublist in check_board)
 
-    if not is_winner:
+    if is_winner:
         print(f"{player} IS WINNER!")
 
     return is_winner
@@ -265,37 +265,56 @@ def game():
     print(f"\n {player_two} please set your ships on the board.\n")
     player_two_ship_board = yours_ship()
 
+    print("\nLet's start shooting !")
+
     player_one_shoot_board = init_board()
     player_two_shoot_board = init_board()
 
     winner = False
 
     while not winner:
+        print(f"\n{player_one} fire!\n")
+
+        display_board(player_one_shoot_board)
+        print("")
         mark_shoot_place(player_one_shoot_board, player_two_ship_board)
         winner = winner_check(player_two_ship_board, player_one)
+        if winner:
+            break
 
+        print(f"\n{player_two} fire!\n")
+
+        display_board(player_two_shoot_board)
+        print("")
         mark_shoot_place(player_two_shoot_board, player_one_ship_board)
         winner = winner_check(player_one_ship_board, player_two)
+        if winner:
+            break
 
 
 def main():
-    print("Welcome to Battle ship game!")
+    print("Welcome to Battle ship game!\n")
+
+    print("Your mission will be destroy three 1-deck scout ships, two 2-deck ships and one 3-deck battleship!\n")
 
     game()
 
 
-# TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING
+if __name__ == '__main__':
+    main()
 
+# TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING
+#
 # player_one = input("What is the first player name? ")
 # player_two = input("What is the second player name? ")
 #
-# player_one_ship_board = [["0", "X", "0", "0", "X"],
+# player_one_ship_board = [["X", "0", "0", "0", "0"],
 #                          ["X", "0", "0", "0", "0"],
 #                          ["X", "0", "0", "0", "0"],
-#                          ["X", "0", "0", "0", "0"],
-#                          ["0", "X", "0", "0", "0"]]
+#                          ["0", "0", "0", "0", "0"],
+#                          ["0", "0", "0", "0", "0"]]
 #
-# player_two_ship_board = [["0", "X", "0", "0", "X"],
+# player_two_ship_board = [["0", "X", "0", "0", "0"],
 #                          ["X", "0", "0", "0", "0"],
 #                          ["X", "0", "0", "0", "0"],
 #                          ["X", "0", "0", "0", "0"],
@@ -304,11 +323,17 @@ def main():
 # player_one_shoot_board = init_board()
 # player_two_shoot_board = init_board()
 #
-# winner = True
+# winner = False
 #
-# while winner:
+# while not winner:
+#     print(f"\n{player_one} fire!")
 #     mark_shoot_place(player_one_shoot_board, player_two_ship_board)
 #     winner = winner_check(player_two_ship_board, player_one)
+#     if winner:
+#         break
 #
+#     print(f"\n{player_two} fire!")
 #     mark_shoot_place(player_two_shoot_board, player_one_ship_board)
 #     winner = winner_check(player_one_ship_board, player_two)
+#     if winner:
+#         break
