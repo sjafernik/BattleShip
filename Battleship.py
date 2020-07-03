@@ -108,8 +108,8 @@ def move_is_possible(board, row, col, ship, ship_placement):
 
 def place_your_one_ship(board, ship):
     # ask player for a coordinates and direction and if its possible set one ship on board
-    flag = True  #making loop to catch error input
-    length_flag = True  #making loop to catch IndexOutOfRange
+    flag = True  # making loop to catch error input
+    length_flag = True  # making loop to catch IndexOutOfRange
     ship_list = []  # list for possible ship cells
     board_with_ships = board
     direction = 0
@@ -123,9 +123,9 @@ def place_your_one_ship(board, ship):
             # player choose direction of his ship 
             if ship == 1:
                 ship_placement = "horizontal"
-            else:  
+            else:
                 ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
-            
+
             if ship_placement != "horizontal" and ship_placement != "vertical":
                 print("Please insert \"horizontal\" or \"vertical\"")
                 ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
@@ -138,13 +138,13 @@ def place_your_one_ship(board, ship):
             # check if ship is not longer than board
             if direction + ship > len(board_with_ships):
                 print("\nPart of your ship is outside of board! Choose another place.")
-                
+
             else:
                 length_flag = False
 
         # init temporary board to not increase our origin board in move_is_possible()
         temp_board = copy.deepcopy(board_with_ships)
-    
+
         if ship_placement == "vertical":
             if move_is_possible(temp_board, row, col, ship, ship_placement):  # check neighbour cells
                 for i in range(ship):
@@ -162,7 +162,6 @@ def place_your_one_ship(board, ship):
             else:
                 print("\nChoose another position\n")
                 length_flag = True
-                
 
         # the same as vertical above
         elif ship_placement == "horizontal":
@@ -173,7 +172,6 @@ def place_your_one_ship(board, ship):
                 if 'X' in ship_list:
                     print("\nChoose another position\n")
                     length_flag = True
-                   
 
                 else:
                     for i in range(ship):
@@ -183,7 +181,6 @@ def place_your_one_ship(board, ship):
             else:
                 print("\nChoose another position\n")
                 length_flag = True
-                
 
     display_board(board_with_ships)
 
@@ -191,12 +188,12 @@ def place_your_one_ship(board, ship):
 
 
 def yours_ship():
-   # function return board with all ships
-    list_of_ships = [3, 2, 2, 1, 1, 1] #list of all ships
+    # function return board with all ships
+    list_of_ships = [3, 2, 2, 1, 1, 1]  # list of all ships
     your_board_with_ships = init_board()
     display_board(your_board_with_ships)
 
-    for i in list_of_ships: #loop for place all ships
+    for i in list_of_ships:  # loop for place all ships
         print(f"\nPlace your's {i}-deck ship")
         ship = i
         your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
@@ -205,14 +202,14 @@ def yours_ship():
 
 
 def mark_shoot_place(my_shoot_board, enemy_board):
+    display_board(my_shoot_board)
+
+    # 0 indicates an undiscovered tile
     missed_shot = 'M'
     hit_ship = 'H'
     sunk_ship = 'S'
     coordinates = player_input()
-    enemy_board_1 = copy.deepcopy(enemy_board)
-
-    # enemy_board = enemy_board
-    # my_shoot_board = my_shoot_board
+    enemy_board = copy.deepcopy(enemy_board)
 
     if my_shoot_board[coordinates[0]][coordinates[1]] != '0' and my_shoot_board[coordinates[0]][coordinates[1]] != 'X':
         print("You have already shot this spot.")
@@ -240,26 +237,21 @@ def mark_shoot_place(my_shoot_board, enemy_board):
             my_shoot_board[coordinates[0]][coordinates[1]] = missed_shot
 
 
-#     # 0 indicates an undiscovered tile
-#     # M indicates a missed shot
-#     # H indicates a hit ship part
-#     # S indicates a sunk ship part
-
-
-def winner_check():
+def winner_check(board, player):
     # sprawdza czy na którejś z tablic nie ma X
     # jeśli nie ma to drugi gracz wygrał
 
-    pass
+    check_board = board
+    is_winner = False
+
+    if ['X'] not in check_board:
+        print(f"{player} IS A WINNER !!!")
+        is_winner = True
+
+    return is_winner
 
 
 def game():
-    pass
-
-
-def main():
-    print("Welcome to Battle ship game!")
-
     player_one = input("What is the first player name? ")
     player_two = input("What is the second player name? ")
 
@@ -268,27 +260,25 @@ def main():
 
     print(f"\n {player_two} please set your ships on the board.\n")
     player_two_ship_board = yours_ship()
-    
-    enemy_board = player_two_ship_board
-    #my_shoot_board = board
 
-    mark_shoot_place(my_shoot_board, enemy_board)
+    player_one_shoot_board = init_board()
+    player_two_shoot_board = init_board()
 
-    enemy_board = player_one_ship_board
-    #my_shoot_board = board
+    winner = False
 
-    mark_shoot_place(my_shoot_board, enemy_board)
+    while not winner:
+
+        mark_shoot_place(player_one_shoot_board, player_two_ship_board)
+        winner = winner_check(player_two_ship_board, player_one)
+
+        mark_shoot_place(player_two_shoot_board, player_one_ship_board)
+        winner = winner_check(player_one_ship_board, player_two)
 
 
+def main():
+    print("Welcome to Battle ship game!")
 
+    game()
 
 
 main()
-
-
-
-# player2_ship_board = [["0", "X", "0", "0", "X"],
-#                       ["X", "0", "0", "0", "0"],
-#                       ["X", "0", "0", "0", "0"],
-#                       ["X", "0", "0", "0", "0"],
-#                       ["0", "X", "0", "0", "0"]]
