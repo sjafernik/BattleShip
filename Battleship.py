@@ -121,8 +121,11 @@ def place_your_one_ship(board, ship):
             col = coordinate[1]  # 1-5
 
             # player choose direction of his ship 
-            ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
-
+            if ship == 1:
+                ship_placement = "horizontal"
+            else:  
+                ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
+            
             if ship_placement != "horizontal" and ship_placement != "vertical":
                 print("Please insert \"horizontal\" or \"vertical\"")
                 ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
@@ -188,26 +191,14 @@ def place_your_one_ship(board, ship):
 
 
 def yours_ship():
-    # function return board with all ships
-
+   # function return board with all ships
+    list_of_ships = [3, 2, 2, 1, 1, 1] #list of all ships
     your_board_with_ships = init_board()
     display_board(your_board_with_ships)
 
-    # ask where to place one 3-deck ship
-    print("\nplace your's 3-deck ship")
-    ship = 3
-    your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
-
-    # ask where to place two 2-deck ships
-    print("\nplace your's two 2-deck ship")
-    for i in range(0, 2):
-        ship = 2
-        your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
-
-    # ask where to place three 1-deck ships
-    print("\nplace three of your's one deck ship")
-    for i in range(0, 3):
-        ship = 1
+    for i in list_of_ships: #loop for place all ships
+        print(f"\nplace your's {i}-deck ship")
+        ship = i
         your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
 
     return your_board_with_ships
