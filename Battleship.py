@@ -108,69 +108,76 @@ def move_is_possible(board, row, col, ship, ship_placement):
 
 def place_your_one_ship(board, ship):
     # ask player for a coordinates and direction and if its possible set one ship on board
-
+    flag = True #making loop to catch error input
     ship_list = []  # list for possible ship cells
     board_with_ships = board
     direction = 0
 
-    coordinate = player_input()
-    row = coordinate[0]  # A-E
-    col = coordinate[1]  # 1-5
+    while flag:
+        coordinate = player_input()
+        row = coordinate[0]  # A-E
+        col = coordinate[1]  # 1-5
 
-    # player choose direction of his ship
-    ship_placement = input("Do you want to place your ship horizontal right or vertical down? ").lower()
+        # player choose direction of his ship 
+        ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
 
-    while ship_placement != "horizontal" and ship_placement != "vertical":
-        print("Please insert \"horizontal\" or \"vertical\"")
-        ship_placement = input("Do you want to place your ship horizontal right or vertical down? ").lower()
+        if ship_placement != "horizontal" and ship_placement != "vertical":
+            print("Please insert \"horizontal\" or \"vertical\"")
+            ship_placement = input("\nDo you want to place your ship horizontal right or vertical down? ").lower()
 
-    if ship_placement == "horizontal":
-        direction = col
-    elif ship_placement == "vertical":
-        direction = row
+        if ship_placement == "horizontal":
+            direction = col
+        elif ship_placement == "vertical":
+            direction = row
 
-    # check if ship is not longer than board
-    while direction + ship > len(board_with_ships):
-        print("Part of your ship is outside of board! Choose another place. ")
-        place_your_one_ship(board, ship)
+        # check if ship is not longer than board
+        if direction + ship > len(board_with_ships):
+            print("Part of your ship is outside of board! Choose another place.\n")
+            #place_your_one_ship(board, ship)
+        else:
+            flag = False
 
-    # init temporary board to not increase our origin board in move_is_possible()
-    temp_board = copy.deepcopy(board_with_ships)
+        # init temporary board to not increase our origin board in move_is_possible()
+        temp_board = copy.deepcopy(board_with_ships)
+    
+        if ship_placement == "vertical":
+            if move_is_possible(temp_board, row, col, ship, ship_placement):  # check neighbour cells
+                for i in range(ship):
+                    ship_list.append(board_with_ships[row + i][col])  # adding possible ship cells to list
 
-    if ship_placement == "vertical":
-        if move_is_possible(temp_board, row, col, ship, ship_placement):  # check neighbour cells
-            for i in range(ship):
-                ship_list.append(board_with_ships[row + i][col])  # adding possible ship cells to list
+                if 'X' in ship_list:  # check possible cells
+                    print("\nchoose another position\n")
+                    flag = True
+                    #place_your_one_ship(board, ship)  # return to the begin of function
 
-            if 'X' in ship_list:  # check possible cells
-                print("choose another position")
-                place_your_one_ship(board, ship)  # return to the begin of function
+                else:
+                    for i in range(ship):
+                        board_with_ships[row + i][col] = 'X'  # mark ship cells
 
             else:
+                print("\nchoose another position\n")
+                flag = True
+                #place_your_one_ship(board, ship)  # if move_is_possible() is False return to the begin of function
+
+        # the same as vertical above
+        elif ship_placement == "horizontal":
+            if move_is_possible(temp_board, row, col, ship, ship_placement):
                 for i in range(ship):
-                    board_with_ships[row + i][col] = 'X'  # mark ship cells
+                    ship_list.append(board_with_ships[row][col + i])
 
-        else:
-            print("choose another position")
-            place_your_one_ship(board, ship)  # if move_is_possible() is False return to the begin of function
+                if 'X' in ship_list:
+                    print("\nchoose another position\n")
+                    flag = True
+                    #place_your_one_ship(board, ship)
 
-    # the same as vertical above
-    elif ship_placement == "horizontal":
-        if move_is_possible(temp_board, row, col, ship, ship_placement):
-            for i in range(ship):
-                ship_list.append(board_with_ships[row][col + i])
-
-            if 'X' in ship_list:
-                print("choose another position")
-                place_your_one_ship(board, ship)
+                else:
+                    for i in range(ship):
+                        board_with_ships[row][col + i] = 'X'
 
             else:
-                for i in range(ship):
-                    board_with_ships[row][col + i] = 'X'
-
-        else:
-            print("choose another position")
-            place_your_one_ship(board, ship)
+                print("\nchoose another position\n")
+                flag = True
+                #place_your_one_ship(board, ship)
 
     display_board(board_with_ships)
 
