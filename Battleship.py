@@ -43,7 +43,7 @@ def player_input():
         f"\nEnter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()  # ask for a row from A to E
 
     while row not in row_list:  # check if input is in board
-        print(f"\nplease choose letter from {row_list[0]}-{row_list[-1]}")
+        print(f"\nPlease choose letter from {row_list[0]}-{row_list[-1]}")
         row = input(f"Enter your row coordinates {row_list[0]}-{row_list[-1]}: ").capitalize()
 
     row = row_list.index(row)  # make from letter an index of row
@@ -54,7 +54,7 @@ def player_input():
             col = int(input(f"\nEnter your col coordinates {begin}-{end - 1}: "))  # ask for a col from board
             break
         except ValueError:
-            print(f"\nplease choose number between {begin} and {end - 1}")  # error when input is 22aaa
+            print(f"\nPlease choose number between {begin} and {end - 1}")  # error when input is 22aaa
 
     while col not in range(begin, end):  # check if input is in board
         col = int(input(f"\nEnter your col coordinates {begin}-{end - 1}: "))
@@ -151,7 +151,7 @@ def place_your_one_ship(board, ship):
                     ship_list.append(board_with_ships[row + i][col])  # adding possible ship cells to list
 
                 if 'X' in ship_list:  # check possible cells
-                    print("\nchoose another position\n")
+                    print("\nChoose another position\n")
                     flag = True
                     length_flag = True
 
@@ -160,7 +160,7 @@ def place_your_one_ship(board, ship):
                         board_with_ships[row + i][col] = 'X'  # mark ship cells
                         flag = False
             else:
-                print("\nchoose another position\n")
+                print("\nChoose another position\n")
                 length_flag = True
                 
 
@@ -171,7 +171,7 @@ def place_your_one_ship(board, ship):
                     ship_list.append(board_with_ships[row][col + i])
 
                 if 'X' in ship_list:
-                    print("\nchoose another position\n")
+                    print("\nChoose another position\n")
                     length_flag = True
                    
 
@@ -181,7 +181,7 @@ def place_your_one_ship(board, ship):
                         flag = False
 
             else:
-                print("\nchoose another position\n")
+                print("\nChoose another position\n")
                 length_flag = True
                 
 
@@ -197,7 +197,7 @@ def yours_ship():
     display_board(your_board_with_ships)
 
     for i in list_of_ships: #loop for place all ships
-        print(f"\nplace your's {i}-deck ship")
+        print(f"\nPlace your's {i}-deck ship")
         ship = i
         your_board_with_ships = place_your_one_ship(your_board_with_ships, ship)
 
@@ -260,13 +260,13 @@ def game():
 def main():
     print("Welcome to Battle ship game!")
 
-    player_one = input("What is first player name? ")
-    player_two = input("What is second player name? ")
+    player_one = input("What is the first player name? ")
+    player_two = input("What is the second player name? ")
 
-    print(f"\n {player_one} please set your ships on board\n")
+    print(f"\n {player_one} please set your ships on the board.\n")
     player_one_ship_board = yours_ship()
 
-    print(f"\n {player_two} please set your ships on board\n")
+    print(f"\n {player_two} please set your ships on the board.\n")
     player_two_ship_board = yours_ship()
     
     enemy_board = player_two_ship_board
